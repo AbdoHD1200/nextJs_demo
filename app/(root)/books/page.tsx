@@ -1,4 +1,4 @@
-
+"use cache";
 import books from "@/app/api/db";
 
 export default async function Page() {
