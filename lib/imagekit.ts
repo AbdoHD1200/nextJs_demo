@@ -7,10 +7,9 @@ interface ImageKitConfig {
 }
 
 function getImageKitConfig(): ImageKitConfig {
-  const publicKey = 'public_p3zOWH/ozI4w5oLiWhOdZtlhCFw=';
-
-  const privateKey = 'private_PyxbSuWDEgq/QB7lpDySuwr80aM=';
-  const urlEndpoint = 'https://ik.imagekit.io/abdoHD1200/';
+  const publicKey = process.env.IMAGEKIT_PUBLIC_KEY;
+  const privateKey = process.env.IMAGEKIT_PRIVATE_KEY;
+  const urlEndpoint = process.env.IMAGEKIT_URL_ENDPOINT;
 
   // Fail fast on the server if configuration is missing to avoid silent upload failures.
   if (!publicKey || !privateKey || !urlEndpoint) {
