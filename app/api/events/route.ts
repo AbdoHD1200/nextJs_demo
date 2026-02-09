@@ -75,6 +75,24 @@ export async function POST(req: NextRequest) {
 
     const file = rawFile as File;
 
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      return NextResponse.json(
+        { message: "Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed." },
+        { status: 400 }
+      );
+    }
+
+    // Validate file size (e.g., 5MB limit)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      return NextResponse.json(
+        { message: "File too large. Maximum size is 5MB." },
+        { status: 400 }
+      );
+    }
+
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
@@ -83,7 +101,6 @@ export async function POST(req: NextRequest) {
       fileName: file.name || "event-photo.jpg",
       folder: "DevEvent",
     })) as ImageKitUploadResult;
-
     const image = uploadResult.url;
 
     // ----- 5. Build event payload that matches schema -----
@@ -128,6 +145,13 @@ export async function GET() {
 
     return NextResponse.json({ message: 'Events fetched successfully', events }, {status: 200});
   } catch (e) {
-    return NextResponse.json({ message: 'Event fetching failed', error: e }, { status: 500});
+    console.error(e);
+    return NextResponse.json(
+      {
+        message: 'Event fetching failed',
+        error: e instanceof Error ? e.message : 'Unknown',
+      },
+      { status: 500 }
+    );
   }
 }

@@ -46,7 +46,6 @@ export async function GET(_req: NextRequest, {params}: {params: Promise<{slug: s
     return NextResponse.json(
       {
         message: "Failed to fetch event.",
-        error: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }
     );
